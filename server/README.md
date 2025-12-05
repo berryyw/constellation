@@ -14,4 +14,4 @@
 ## 示例
 
 - `curl "http://localhost:3000/api/horoscope?date=2025-12-05&constellation=白羊座"`
- - `PORT=8080 HOST=0.0.0.0 CORS_ORIGINS=https://your-domain.example.com npm start`
+ - `PORT=8080 HOST=0.0.0.0 CORS_ORIGINS=https://express-cbc1-205413-6-1390581601.sh.run.tcloudbase.com/ npm start`
