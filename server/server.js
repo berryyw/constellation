@@ -15,6 +15,7 @@ const LLM_API_KEY = process.env.LLM_API_KEY || ''
 const LLM_MODEL = process.env.LLM_MODEL || ''
 const LLM_BASE_URL = process.env.LLM_BASE_URL || ''
 const LLM_TIMEOUT = Number(process.env.LLM_TIMEOUT || 15000)
+const LLM_MAX_TOKENS = Number(process.env.LLM_MAX_TOKENS || 1200)
 const CACHE_TTL = Number(process.env.LLM_CACHE_TTL || 86400)
 const cache = new Map()
 const nowSec = () => Math.floor(Date.now() / 1000)
@@ -94,7 +95,7 @@ app.get("/api/horoscope", (req, res) => {
   }
   if (!USE_LLM) { setCache(`basic:${key}`, base); res.set('x-source','local'); return res.json(base) }
   const prompt = buildPrompt({ date, constellation, seed: key })
-  generateHoroscope({ provider: LLM_PROVIDER, baseURL: LLM_BASE_URL, apiKey: LLM_API_KEY, model: LLM_MODEL, prompt, timeoutMs: LLM_TIMEOUT })
+  generateHoroscope({ provider: LLM_PROVIDER, baseURL: LLM_BASE_URL, apiKey: LLM_API_KEY, model: LLM_MODEL, prompt, timeoutMs: LLM_TIMEOUT, maxTokens: LLM_MAX_TOKENS })
     .then(data => {
       const result = {
         ...base,
@@ -102,6 +103,9 @@ app.get("/api/horoscope", (req, res) => {
       }
       setCache(`basic:${key}`, result)
       res.set('x-source','llm')
+      res.set('x-source','llm')
+      res.set('x-llm-provider', LLM_PROVIDER)
+      res.set('x-llm-model', LLM_MODEL)
       res.json(result)
     })
     .catch((e) => {
@@ -118,7 +122,7 @@ app.get('/api/horoscope/rich', (req, res) => {
   const cached = getCache(`rich:${key}`)
   if (cached) return res.json(cached)
   const prompt = buildPrompt({ date, constellation, seed: key })
-  generateHoroscope({ provider: LLM_PROVIDER, baseURL: LLM_BASE_URL, apiKey: LLM_API_KEY, model: LLM_MODEL, prompt, timeoutMs: LLM_TIMEOUT })
+  generateHoroscope({ provider: LLM_PROVIDER, baseURL: LLM_BASE_URL, apiKey: LLM_API_KEY, model: LLM_MODEL, prompt, timeoutMs: LLM_TIMEOUT, maxTokens: LLM_MAX_TOKENS })
     .then(data => {
       const rnd = rng(hash(key))
       const base = {
@@ -145,6 +149,8 @@ app.get('/api/horoscope/rich', (req, res) => {
       }
       setCache(`rich:${key}`, result)
       res.set('x-source','llm')
+      res.set('x-llm-provider', LLM_PROVIDER)
+      res.set('x-llm-model', LLM_MODEL)
       res.json(result)
     })
     .catch((e) => {
