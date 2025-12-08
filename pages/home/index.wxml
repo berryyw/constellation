@@ -1,0 +1,6 @@
+<view class="container">
+  <view class="card" bindtap="onGoConste">
+    <view class="thumb"></view>
+    <text class="title">星座运势查询</text>
+  </view>
+</view>

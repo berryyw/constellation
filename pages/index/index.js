@@ -122,7 +122,8 @@ Page({
       const res = toResult(p)
       this.setData({ result: res })
       wx.setStorageSync("selection", { date: this.data.date, constellationIndex: this.data.constellationIndex })
-    }).catch(() => {
+    }).catch((e) => {
+      console.error("api_error", e)
       const res = computeLocal(this.data.date, c)
       this.setData({ result: res })
       wx.setStorageSync("selection", { date: this.data.date, constellationIndex: this.data.constellationIndex })

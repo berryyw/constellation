@@ -1,0 +1,24 @@
+.container {
+  padding: 16px;
+}
+.card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  border: 1px solid #eee;
+}
+.thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #ffe6a7 0%, #ffd1dc 100%);
+}
+.title {
+  font-size: 18px;
+  color: #111;
+  font-weight: 600;
+}
