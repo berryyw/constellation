@@ -92,7 +92,7 @@ app.get("/api/horoscope", (req, res) => {
     suggestion: pick(rnd, suggests),
     summary: pick(rnd, summarys)
   }
-  if (!USE_LLM) { setCache(`basic:${key}`, base); return res.json(base) }
+  if (!USE_LLM) { setCache(`basic:${key}`, base); res.set('x-source','local'); return res.json(base) }
   const prompt = buildPrompt({ date, constellation, seed: key })
   generateHoroscope({ provider: LLM_PROVIDER, baseURL: LLM_BASE_URL, apiKey: LLM_API_KEY, model: LLM_MODEL, prompt, timeoutMs: LLM_TIMEOUT })
     .then(data => {
@@ -101,9 +101,12 @@ app.get("/api/horoscope", (req, res) => {
         ...(data || {})
       }
       setCache(`basic:${key}`, result)
+      res.set('x-source','llm')
       res.json(result)
     })
-    .catch(() => {
+    .catch((e) => {
+      console.error('llm_error_basic', String(e && e.message || e))
+      res.set('x-source','local_fallback')
       res.json(base)
     })
 })
@@ -137,19 +140,24 @@ app.get('/api/horoscope/rich', (req, res) => {
         negotiationIndex: data?.negotiationIndex || undefined,
         sections: data?.sections || {
           overall: '', love: '', career: '', wealth: '', health: ''
-        }
+        },
+        source: 'llm'
       }
       setCache(`rich:${key}`, result)
+      res.set('x-source','llm')
       res.json(result)
     })
-    .catch(() => {
+    .catch((e) => {
+      console.error('llm_error_rich', String(e && e.message || e))
       const rnd = rng(hash(key))
       const resLite = {
         overall: score(rnd), love: score(rnd), career: score(rnd), wealth: score(rnd), health: score(rnd), study: score(rnd), social: score(rnd),
         luckyColor: pick(rnd, colors), luckyNumber: 1 + Math.floor(rnd() * 9),
         title: '今日运势',
-        sections: { overall: '保持耐心，循序渐进。', love: '主动沟通，争取机会。', career: '专注当下，避免分心。', wealth: '理性消费，按计划执行。', health: '适度休息，调节节奏。' }
+        sections: { overall: '保持耐心，循序渐进。', love: '主动沟通，争取机会。', career: '专注当下，避免分心。', wealth: '理性消费，按计划执行。', health: '适度休息，调节节奏。' },
+        source: 'local_fallback'
       }
+      res.set('x-source','local_fallback')
       res.json(resLite)
     })
 })
