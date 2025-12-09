@@ -42,7 +42,9 @@ const toResult = p => ({
   luckyColor: p.luckyColor,
   luckyNumber: String(p.luckyNumber),
   suggestion: p.suggestion || pickText(p),
-  summary: p.summary || (p.sections && p.sections.overall) || p.title || ""
+  summary: p.summary || (p.sections && p.sections.overall) || p.title || "",
+  title: p.title || "",
+  sections: p.sections || {}
 })
 const computeLocal = (date, c) => {
   const s = `${date}-${c}`

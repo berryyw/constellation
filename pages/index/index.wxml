@@ -1,4 +1,10 @@
-<view class="container">
+<view class="page">
+  <view class="header" wx:if="{{result}}">
+    <text class="constellation">{{constellations[constellationIndex]}}</text>
+    <text class="date">{{date}}</text>
+    <text class="title">{{result.title || '今日运势'}}</text>
+  </view>
+  <view class="container">
   <view class="picker-row">
     <text class="label">选择星座</text>
     <picker mode="selector" range="{{constellations}}" value="{{constellationIndex}}" bindchange="onConstellationChange">
@@ -13,49 +19,37 @@
   </view>
   <button class="compute" type="primary" bindtap="onCompute">开始测算</button>
   <view wx:if="{{result}}" class="result">
-    <view class="section">
-      <text class="section-title">今日综述</text>
-      <text class="summary">{{result.summary}}</text>
+    <view class="stats">
+      <view class="stat"><text class="label">综合运势</text><text class="stars">{{result.overallStars}}</text></view>
+      <view class="stat"><text class="label">爱情运势</text><text class="stars">{{result.loveStars}}</text></view>
+      <view class="stat"><text class="label">事业运势</text><text class="stars">{{result.careerStars}}</text></view>
+      <view class="stat"><text class="label">财运运势</text><text class="stars">{{result.wealthStars}}</text></view>
+      <view class="stat"><text class="label">健康运势</text><text class="stars">{{result.healthStars}}</text></view>
+      <view class="stat"><text class="label">幸运色</text><text class="value">{{result.luckyColor}}</text></view>
+      <view class="stat"><text class="label">幸运数字</text><text class="value">{{result.luckyNumber}}</text></view>
     </view>
-    <view class="section">
-      <text class="section-title">综合</text>
-      <text class="stars">{{result.overallStars}}</text>
+    <view class="cards">
+      <view class="card">
+        <text class="card-title">综合运势</text>
+        <text class="card-content">{{result.sections.overall}}</text>
+      </view>
+      <view class="card">
+        <text class="card-title">爱情运势</text>
+        <text class="card-content">{{result.sections.love}}</text>
+      </view>
+      <view class="card">
+        <text class="card-title">事业学业</text>
+        <text class="card-content">{{result.sections.career}}</text>
+      </view>
+      <view class="card">
+        <text class="card-title">财富运势</text>
+        <text class="card-content">{{result.sections.wealth}}</text>
+      </view>
+      <view class="card">
+        <text class="card-title">健康运势</text>
+        <text class="card-content">{{result.sections.health}}</text>
+      </view>
     </view>
-    <view class="section">
-      <text class="section-title">爱情</text>
-      <text class="stars">{{result.loveStars}}</text>
-    </view>
-    <view class="section">
-      <text class="section-title">事业</text>
-      <text class="stars">{{result.careerStars}}</text>
-    </view>
-    <view class="section">
-      <text class="section-title">财运</text>
-      <text class="stars">{{result.wealthStars}}</text>
-    </view>
-    <view class="section">
-      <text class="section-title">健康</text>
-      <text class="stars">{{result.healthStars}}</text>
-    </view>
-    <view class="section">
-      <text class="section-title">学业</text>
-      <text class="stars">{{result.studyStars}}</text>
-    </view>
-    <view class="section">
-      <text class="section-title">人际</text>
-      <text class="stars">{{result.socialStars}}</text>
-    </view>
-    <view class="section">
-      <text class="section-title">幸运色</text>
-      <text class="value">{{result.luckyColor}}</text>
-    </view>
-    <view class="section">
-      <text class="section-title">幸运数字</text>
-      <text class="value">{{result.luckyNumber}}</text>
-    </view>
-    <view class="section">
-      <text class="section-title">建议</text>
-      <text class="summary">{{result.suggestion}}</text>
-    </view>
+  </view>
   </view>
 </view>

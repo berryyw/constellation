@@ -137,6 +137,14 @@ app.get('/api/horoscope/rich', (req, res) => {
         luckyNumber: 1 + Math.floor(rnd() * 9)
       }
       const fix = v => typeof v === 'string' && v.trim().length > 0 ? v : undefined
+      const fit = s => {
+        const t = String(s || '').trim()
+        if (!t) return t
+        const max = 450
+        const min = 350
+        if (t.length > max) return t.slice(0, max).replace(/[，、；。!?…\-\s]*$/, '') + '。'
+        return t
+      }
       const result = {
         ...base,
         title: fix(data?.title) || '今日运势',
@@ -144,11 +152,11 @@ app.get('/api/horoscope/rich', (req, res) => {
         healthIndex: Number(data?.healthIndex) || undefined,
         negotiationIndex: Number(data?.negotiationIndex) || undefined,
         sections: {
-          overall: fix(data?.sections?.overall) || '整体氛围积极向上，建议专注关键事项，合理安排节奏。',
-          love: fix(data?.sections?.love) || '多表达与倾听，制造温馨互动氛围，适度惊喜拉近距离。',
-          career: fix(data?.sections?.career) || '明确优先级，先易后难，主动沟通与复盘，提升执行效率。',
-          wealth: fix(data?.sections?.wealth) || '理性消费，遵循预算；关注兼职或收益机会，避免冲动投资。',
-          health: fix(data?.sections?.health) || '规律作息与轻运动并重，适度冥想放松，补充水分与蔬果。'
+          overall: fit(fix(data?.sections?.overall) || '整体氛围积极向上，建议专注关键事项，合理安排节奏。'),
+          love: fit(fix(data?.sections?.love) || '多表达与倾听，制造温馨互动氛围，适度惊喜拉近距离。'),
+          career: fit(fix(data?.sections?.career) || '明确优先级，先易后难，主动沟通与复盘，提升执行效率。'),
+          wealth: fit(fix(data?.sections?.wealth) || '理性消费，遵循预算；关注兼职或收益机会，避免冲动投资。'),
+          health: fit(fix(data?.sections?.health) || '规律作息与轻运动并重，适度冥想放松，补充水分与蔬果。')
         },
         source: 'llm'
       }
