@@ -136,14 +136,19 @@ app.get('/api/horoscope/rich', (req, res) => {
         luckyColor: pick(rnd, colors),
         luckyNumber: 1 + Math.floor(rnd() * 9)
       }
+      const fix = v => typeof v === 'string' && v.trim().length > 0 ? v : undefined
       const result = {
         ...base,
-        title: data?.title || '',
-        matchConstellation: data?.matchConstellation || '',
-        healthIndex: data?.healthIndex || undefined,
-        negotiationIndex: data?.negotiationIndex || undefined,
-        sections: data?.sections || {
-          overall: '', love: '', career: '', wealth: '', health: ''
+        title: fix(data?.title) || '今日运势',
+        matchConstellation: fix(data?.matchConstellation) || '射手座',
+        healthIndex: Number(data?.healthIndex) || undefined,
+        negotiationIndex: Number(data?.negotiationIndex) || undefined,
+        sections: {
+          overall: fix(data?.sections?.overall) || '整体氛围积极向上，建议专注关键事项，合理安排节奏。',
+          love: fix(data?.sections?.love) || '多表达与倾听，制造温馨互动氛围，适度惊喜拉近距离。',
+          career: fix(data?.sections?.career) || '明确优先级，先易后难，主动沟通与复盘，提升执行效率。',
+          wealth: fix(data?.sections?.wealth) || '理性消费，遵循预算；关注兼职或收益机会，避免冲动投资。',
+          health: fix(data?.sections?.health) || '规律作息与轻运动并重，适度冥想放松，补充水分与蔬果。'
         },
         source: 'llm'
       }
