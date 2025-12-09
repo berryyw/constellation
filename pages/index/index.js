@@ -27,6 +27,10 @@ const pick = (rnd, arr) => arr[Math.floor(rnd() * arr.length)]
 const score = rnd => 1 + Math.floor(rnd() * 5)
 const api = require("../../utils/api")
 const toStars = v => typeof v === "string" ? v : stars(Number(v))
+const pickText = p => {
+  const s = p?.sections || {}
+  return s.career || s.love || s.wealth || s.health || p?.title || ""
+}
 const toResult = p => ({
   overallStars: toStars(p.overall),
   loveStars: toStars(p.love),
@@ -37,8 +41,8 @@ const toResult = p => ({
   socialStars: toStars(p.social),
   luckyColor: p.luckyColor,
   luckyNumber: String(p.luckyNumber),
-  suggestion: p.suggestion,
-  summary: p.summary
+  suggestion: p.suggestion || pickText(p),
+  summary: p.summary || (p.sections && p.sections.overall) || p.title || ""
 })
 const computeLocal = (date, c) => {
   const s = `${date}-${c}`
@@ -118,7 +122,7 @@ Page({
   onCompute() {
     const c = this.data.constellations[this.data.constellationIndex]
     wx.showLoading({ title: "加载中" })
-    api.fetchHoroscope(this.data.date, c).then(p => {
+    api.fetchHoroscopeRich(this.data.date, c).then(p => {
       const res = toResult(p)
       this.setData({ result: res })
       wx.setStorageSync("selection", { date: this.data.date, constellationIndex: this.data.constellationIndex })
